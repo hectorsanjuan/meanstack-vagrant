@@ -1,0 +1,43 @@
+vm:
+  hostname: null
+  chosen_provisioner: "salt"
+  chosen_provider: "virtualbox"
+  memory: "512"
+
+  network:
+    private_network: 10.0.0.10
+    forwarded_ports:
+      express_service:
+        host: "3000"
+        guest: "3000"
+
+  provider:
+    virtualbox:
+      modifyvm:
+        natdnshostresolver1: on
+
+  synced_folders:
+    vagrant:
+      source: ./
+      target: /vagrant
+    provision:
+      source: ./provision/salt/roots
+      target: /srv
+    project:
+      source: ../
+      target: /home/vagrant/project
+
+  provisioner:
+    salt:
+      minion_config: provision/salt/minion
+      run_highstate: true
+      colorize: true
+      log_leve: "debug"
+      pillar:
+        node:
+          version: 0.10.28
+          checksum: ef08a75f6359a16e672cae684e0804ca7f4554b7
+          make_jobs: 2
+
+ssh:
+  forward_agent: true
